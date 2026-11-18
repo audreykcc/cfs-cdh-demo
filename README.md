@@ -11,13 +11,14 @@ exploring a permanently shadowed region (PSR).
 
 - [x] App builds and runs in the current cFS bundle (`native_std` target)
 - [x] Own message IDs, separate from NASA's sample_app
-- [x] `NOOP` and `RESET_COUNTERS` commands
-- [x] `SET_THRESHOLD` command with a typed payload
-- [ ] Housekeeping telemetry includes the threshold
-- [ ] Data tagging: store records with sequence numbers until the ground acknowledges receipt
-- [ ] `ACK_DOWNLINK` command to free acknowledged records
-- [ ] Simulated power telemetry + Return-to-Sunlight using cFS LC and SC apps
-- [ ] Stored command sequence for a PSR traverse (cFS SC app)
+- [x] `NOOP`, `RESET_COUNTERS`, and `SET_THRESHOLD` (typed payload) commands
+- [x] Commands use CCSDS packet format (supports CDH-008)
+- [ ] Housekeeping telemetry includes threshold and mode
+- [ ] Store records until ground acknowledges receipt + `ACK_DOWNLINK` (CDH-001)
+- [ ] Tag each record with simulated position and depth (CDH-002)
+- [ ] `SAFE_MODE` command: stop recording, keep stored data (CDH-009)
+- [ ] Simulated battery + Return-to-Sunlight via cFS LC and SC (CDH-004)
+- [ ] Stored command sequence for a PSR traverse via cFS SC (CDH-003)
 
 ## Commands
 
