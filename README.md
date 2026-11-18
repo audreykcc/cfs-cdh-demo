@@ -1,22 +1,85 @@
-![Static Analysis](https://github.com/nasa/cdh_app/workflows/Static%20Analysis/badge.svg)
-![Format Check](https://github.com/nasa/cdh_app/workflows/Format%20Check/badge.svg)
+# cFS CDH Demo App (`cdh_app`)
 
-# Core Flight System : Framework : App : Sample
+A small NASA core Flight System (cFS) application that demonstrates command
+and data handling (CDH) concepts for a student lunar rover mission concept
+exploring a permanently shadowed region (PSR).
 
-This repository contains a sample application (cdh_app), which is a framework component of the Core Flight System.
+> **Concept demo on a simulated Linux target — not flight software.**
+> All thresholds and values are generic placeholders.
 
-This sample application is a non-flight example application implementation for the cFS Bundle. It is intended to be located in the `apps/cdh_app` subdirectory of a cFS Mission Tree. A demonstration bundle of the Core Flight System is available at <https://github.com/nasa/cFS> (which includes cdh_app as a submodule) and includes build and execution instructions.
+## Status
 
-For information about a mission ready cFS bundle, see: <https://github.com/nasa/cFS#cfs-gov-mission-ready-version> 
+- [x] App builds and runs in the current cFS bundle (`native_std` target)
+- [x] Own message IDs, separate from NASA's sample_app
+- [x] `NOOP` and `RESET_COUNTERS` commands
+- [x] `SET_THRESHOLD` command with a typed payload
+- [ ] Housekeeping telemetry includes the threshold
+- [ ] Data tagging: store records with sequence numbers until the ground acknowledges receipt
+- [ ] `ACK_DOWNLINK` command to free acknowledged records
+- [ ] Simulated power telemetry + Return-to-Sunlight using cFS LC and SC apps
+- [ ] Stored command sequence for a PSR traverse (cFS SC app)
 
-cdh_app is an example for how to build and link an application in cFS. See also the skeleton_app (<https://github.com/nasa/skeleton_app>) if you are looking for a bare-bones application to which to add your business logic.
+## Commands
 
-## Known issues
+| Command | Code | Payload | Effect |
+|---|---|---|---|
+| NOOP | 0 | none | Sends an event with the app version |
+| RESET_COUNTERS | 1 | none | Resets command counters |
+| SET_THRESHOLD | 4 | `int32 Threshold` | Sets the recording threshold |
 
-As a sample application, extensive testing is not performed prior to release and only minimal functionality is included. Note discrepancies likely exist between this application and the example detailed in the application developer guide. See all [open issues](https://github.com/nasa/cdh_app/issues).
+Command message ID: `0x18D0`
 
-## Getting Help
+## Build
 
-For best results, submit issues:questions or issues:help wanted requests at <https://github.com/nasa/cFS>.
+Tested on Ubuntu 24.04 (arm64) with the current `nasa/cFS` bundle.
 
-Official cFS page: <http://cfs.gsfc.nasa.gov>
+1. Clone cFS:
+   ```
+   git clone --recurse-submodules https://github.com/nasa/cFS.git
+   cd cFS
+   ```
+2. Clone this repo into the apps folder:
+   ```
+   git clone https://github.com/audreykcc/cfs-cdh-demo.git apps/cdh_app
+   ```
+3. Register the app:
+   - `sample_defs/targets.cmake`: add `cdh_app` to `MISSION_GLOBAL_APPLIST`
+   - `sample_defs/generate_startup.cmake`: add
+     ```
+     "CFE_APP, cdh_app,     CDH_APP_Main,       CDH_APP,      50,   32768, 0x0, 0;\n"
+     ```
+4. Build:
+   ```
+   make native_std.prep
+   make native_std.install
+   ```
+
+## Run and test
+
+Terminal 1:
+```
+cd build-native_std/exe/cpu1
+./core-cpu1
+```
+
+Terminal 2:
+```
+cd tools/cFS-GroundSystem/Subsystems/cmdUtil
+make
+./cmdUtil --host=127.0.0.1 --endian=LE --pktid=0x18D0 --cmdcode=0
+./cmdUtil --host=127.0.0.1 --endian=LE --pktid=0x18D0 --cmdcode=4 --long=42
+```
+
+Expected output in Terminal 1:
+```
+CDH_APP 3: CDH: NOOP command ...
+CDH_APP 13: CDH: Threshold set to 42
+```
+
+## Credits and license
+
+Based on NASA's [sample_app](https://github.com/nasa/sample_app), part of the
+[core Flight System](https://github.com/nasa/cFS). Licensed under the Apache
+License 2.0. See [LICENSE](LICENSE).
+
+Author: Audrey Criss
