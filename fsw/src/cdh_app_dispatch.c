@@ -118,6 +118,12 @@ void CDH_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 CDH_APP_SetThresholdCmd((const CDH_APP_SetThresholdCmd_t *)SBBufPtr);
             }
             break;
+        case CDH_APP_SIM_SAMPLE_CC:
+            if (CDH_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CDH_APP_SimSampleCmd_t)))
+            {
+                CDH_APP_SimSampleCmd((const CDH_APP_SimSampleCmd_t *)SBBufPtr);
+            }
+            break;
 
         default:
             CFE_EVS_SendEvent(CDH_APP_CC_ERR_EID,

@@ -41,6 +41,7 @@ enum CDH_APP_FunctionCode_
     CDH_APP_FunctionCode_PROCESS        = 2,
     CDH_APP_FunctionCode_DISPLAY_PARAM  = 3,
     CDH_APP_FunctionCode_SET_THRESHOLD  = 4,
+    CDH_APP_FunctionCode_SIM_SAMPLE     = 5,
 };
 
 #endif

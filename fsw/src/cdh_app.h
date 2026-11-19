@@ -45,6 +45,17 @@
 /*
 ** Global Data
 */
+
+/* Maximum number of stored records */
+#define CDH_APP_STORE_CAPACITY 16
+
+/* One stored science record */
+typedef struct
+{
+    uint32 Seq;   /* unique sequence number */
+    int32  Value; /* sensor reading that crossed the threshold */
+} CDH_APP_Record_t;
+
 typedef struct
 {
     /*
@@ -53,6 +64,11 @@ typedef struct
     uint8 CommandCounter;
     uint8 CommandErrorCounter;
     int32 Threshold; /* set by SET_THRESHOLD command */
+
+        /* Record store (CDH-001): records stay here until the ground acknowledges them */
+    CDH_APP_Record_t Store[CDH_APP_STORE_CAPACITY];
+    uint16           StoreCount; /* how many records are stored right now */
+    uint32           NextSeq;    /* sequence number for the next record */
 
     /*
     ** Housekeeping telemetry packet...

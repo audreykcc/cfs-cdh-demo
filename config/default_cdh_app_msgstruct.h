@@ -72,6 +72,12 @@ typedef struct
     CDH_APP_SetThreshold_Payload_t Payload;
 } CDH_APP_SetThresholdCmd_t;
 
+typedef struct
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CDH_APP_SimSample_Payload_t Payload;
+} CDH_APP_SimSampleCmd_t;
+
 /*************************************************************************/
 /*
 ** Type definition (CDH App housekeeping)

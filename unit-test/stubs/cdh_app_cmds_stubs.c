@@ -115,3 +115,19 @@ CFE_Status_t CDH_APP_SetThresholdCmd(const CDH_APP_SetThresholdCmd_t *Msg)
 
     return UT_GenStub_GetReturnValue(CDH_APP_SetThresholdCmd, CFE_Status_t);
 }
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CDH_APP_SimSampleCmd()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CDH_APP_SimSampleCmd(const CDH_APP_SimSampleCmd_t *Msg)
+{
+    UT_GenStub_SetupReturnBuffer(CDH_APP_SimSampleCmd, CFE_Status_t);
+
+    UT_GenStub_AddParam(CDH_APP_SimSampleCmd, const CDH_APP_SimSampleCmd_t *, Msg);
+
+    UT_GenStub_Execute(CDH_APP_SimSampleCmd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CDH_APP_SimSampleCmd, CFE_Status_t);
+}

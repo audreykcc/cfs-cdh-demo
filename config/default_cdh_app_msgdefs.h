@@ -50,4 +50,9 @@ typedef struct CDH_APP_HkTlm_Payload
     uint8 CommandErrorCounter;
 } CDH_APP_HkTlm_Payload_t;
 
+typedef struct CDH_APP_SimSample_Payload
+{
+    int32 Value; /**< Simulated sensor reading */
+} CDH_APP_SimSample_Payload_t;
+
 #endif
