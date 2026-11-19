@@ -36,5 +36,6 @@ CFE_Status_t CDH_APP_ResetCountersCmd(const CDH_APP_ResetCountersCmd_t *Msg);
 CFE_Status_t CDH_APP_ProcessCmd(const CDH_APP_ProcessCmd_t *Msg);
 CFE_Status_t CDH_APP_DisplayParamCmd(const CDH_APP_DisplayParamCmd_t *Msg);
 CFE_Status_t CDH_APP_SetThresholdCmd(const CDH_APP_SetThresholdCmd_t *Msg);
+CFE_Status_t CDH_APP_SimSampleCmd(const CDH_APP_SimSampleCmd_t *Msg);
 
 #endif /* CDH_APP_CMDS_H */

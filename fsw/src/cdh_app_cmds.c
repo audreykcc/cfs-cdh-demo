@@ -177,3 +177,39 @@ CFE_Status_t CDH_APP_SetThresholdCmd(const CDH_APP_SetThresholdCmd_t *Msg) {
 
     return CFE_SUCCESS;
 }
+
+/* Simulate one sensor reading. Store it only if it crosses the threshold (CDH-001) */
+CFE_Status_t CDH_APP_SimSampleCmd(const CDH_APP_SimSampleCmd_t *Msg)
+{
+    int32 Value = Msg->Payload.Value;
+
+    CDH_APP_Data.CommandCounter++;
+
+    if (Value <= CDH_APP_Data.Threshold)
+    {
+        CFE_EVS_SendEvent(CDH_APP_SKIP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "CDH: Value %ld below threshold %ld, not stored",
+                          (long)Value, (long)CDH_APP_Data.Threshold);
+        return CFE_SUCCESS;
+    }
+
+    if (CDH_APP_Data.StoreCount >= CDH_APP_STORE_CAPACITY)
+    {
+        CFE_EVS_SendEvent(CDH_APP_STORE_FULL_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CDH: Store full (%u records), value %ld dropped",
+                          (unsigned int)CDH_APP_Data.StoreCount, (long)Value);
+        return CFE_SUCCESS;
+    }
+
+    CDH_APP_Data.NextSeq++;
+    CDH_APP_Data.Store[CDH_APP_Data.StoreCount].Seq   = CDH_APP_Data.NextSeq;
+    CDH_APP_Data.Store[CDH_APP_Data.StoreCount].Value = Value;
+    CDH_APP_Data.StoreCount++;
+
+    CFE_EVS_SendEvent(CDH_APP_RECORD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "CDH: Stored record seq=%lu value=%ld (%u stored)",
+                      (unsigned long)CDH_APP_Data.NextSeq, (long)Value,
+                      (unsigned int)CDH_APP_Data.StoreCount);
+
+    return CFE_SUCCESS;
+}
